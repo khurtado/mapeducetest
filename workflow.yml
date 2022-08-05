@@ -1,0 +1,20 @@
+stages:
+  - name: map_full
+    dependencies: [init]
+    scheduler:
+      scheduler_type: multistep-stage
+      parameters:
+        inputpar: {stages: init, output: input, unwrap: true}
+        input: {stages: init, output: input, unwrap: true}
+      workflow: {$ref: subworkflow.yml}
+      scatter:
+        method: zip
+        parameters: [input]
+      batchsize: 3
+  - name: combine_full
+    dependencies: [map_full]
+    scheduler:
+      scheduler_type: singlestep-stage
+      parameters:
+        input: {stages: 'map_full[*]', output: outputA, flatten:true}
+      step: {$ref: steps.yml#/stepA}
