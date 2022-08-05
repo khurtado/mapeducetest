@@ -16,5 +16,5 @@ stages:
     scheduler:
       scheduler_type: singlestep-stage
       parameters:
-        input: {stages: 'map_full[*]', output: outputA, flatten:true}
+        input: {step: 'map_full[*].reduce', output: outputA, flatten:true}
       step: {$ref: steps.yml#/stepA}
